@@ -1,8 +1,167 @@
 #*********************************************************************
-#File name:     A5.ipynb
+#File name:     A5.py
 #Author:        Andrew, Hannah, Roman
 #Date:  	    05/08/23
 #Class: 	    DSCI 440W
 #Assignment:    IA5
 #Purpose:       PCA   
 #**********************************************************************
+
+#imports
+import sympy as sp
+import numpy as np
+import pylab as pp
+import math
+import csv
+import matplotlib.pyplot as plt
+from sympy import *
+from numpy.linalg import inv, norm
+sp.init_printing(use_unicode=True, use_latex='mathjax')
+
+TRAIN_FILE = "usps-4-9-train.csv"
+TEST_FILE = "usps-4-9-test.csv"
+TRAIN_FILE = "knownData.csv"
+testLabel_Index = 256
+trainLabel_Index = 3
+
+#Read Data
+def readCSVData(fileName):
+    """    
+    Function:   readData
+    Descripion: Opens and reads text file
+    Input:      fileName - name of file to read from
+    Output:     dataList - numpy array of data from file being read
+    """
+    dataList = []
+    # with open(fileName, "r") as f:
+    #     raw = f.read()
+    #     for line in raw.split("\n"):
+    #         subLine = line.split()
+    #         dataList.append(subLine)
+
+    with open(fileName, 'r') as file:
+        csvreader = csv.reader(file)
+        for row in csvreader:
+            # print(row)
+            dataList.append(row)
+    return dataList
+
+def computeCovariacneMatrix (data):
+    """
+    Function:       computeCovarianceMatrix
+    Description:    computes the covarience matrix for training data
+    Input:          data  - matrix of data to find covarience of
+    Output:         covMatrix - Covarience matrix of data
+    
+    """
+
+    covMatrix = []
+    centerMat = []
+    centerRow = []
+
+    meanArr = computeVectorMean(data)
+    trainRows = len(data)
+    trainCol = len(data[0])
+
+    for i in range(trainRows):
+        for j in range(trainCol):
+            center = data[i][j] - meanArr[j]
+            centerRow.append(center)
+        centerMat.append(centerRow)
+        centerRow = []
+    centerMat = np.array(centerMat)
+    # centermat is the matrix after subtracoin is performed
+    # print(centerMat)
+    product = np.dot(centerMat,centerMat.T)
+    covMatrix = np.divide(product, trainRows)
+
+    return(covMatrix)
+
+def computeVectorMean(matrixX):
+    """
+    Function:   computeVectorMean
+    Descripion: computes the vector mean of a matrix and returns the mean of each column in an array
+    Input:      matrixX - matrix of vectors to be compued
+    Output:     meansArray - array of vector means
+    """
+    meansArr = []
+    #np.cov(matrix)
+    matXT = matrixX.T
+    numCols = len(matXT[0])
+    numRows = len(matXT)
+
+    for i in range(numRows):
+        avg = np.mean(matXT[i])
+        meansArr.append(avg)
+
+    return(meansArr)
+
+    
+
+
+
+def driver ():
+    testData = []
+    trainData = []
+    trainOutput = []
+    testOutput = []
+
+
+    testData = readCSVData(TEST_FILE)
+    trainData = readCSVData(TRAIN_FILE)
+
+    #Apply outpts to its own array
+    for i in range(len(trainData)):
+        trainOutput.append(trainData[i][trainLabel_Index])
+    for i in range(len(testData)):
+        testOutput.append(testData[i][testLabel_Index])
+
+    #Convert outputs to numpy array
+    trainOutput = np.array(trainOutput, dtype=float)
+    testOutput = np.array(testOutput, dtype=float) 
+
+    #Create input array
+    trainFeatures = np.array(trainData, dtype=float)
+    testFeatures = np.array(testData,dtype=float)
+
+    #Delte label from feature array
+    trainFeatures = np.delete(trainFeatures,trainLabel_Index, axis=1)
+    testFeatures = np.delete(testFeatures,testLabel_Index, axis=1)
+
+    numTrainFeatures = len(trainOutput)
+        #reshape arary
+    trainOutput = trainOutput.reshape(numTrainFeatures,1)
+    numTestFeatures =  len(testFeatures)
+    testOutput = testOutput.reshape(numTestFeatures,1)
+    numTrainFeatures = len(trainFeatures)
+
+
+    ##help ensure training data is read in properly I lareda checkd andit looks good
+    # counter4 = 0
+    # counter9 = 0
+    # for i in range(numTrainFeatures):
+    #      length = (len(trainFeatures[i]))
+    #      if (length == 256):
+    #         if (trainOutput[i] == 0):
+    #             counter4 += 1
+    #         elif (trainOutput[i] == 1):
+    #              counter9 += 1
+    #         else:
+    #          print("data read error")
+             
+    # if (counter9 == counter4 and counter9 == 700):
+    #     print("train data read in properly")
+
+
+    ## Compute Covarience matix
+    covMatrix = computeCovariacneMatrix(trainFeatures)
+    eigenVal, eigenVect = np.linalg.eig(covMatrix)
+    # Sort eigen values and vectors from largest to smallest
+    idx = eigenVal.argsort()[::-1]
+    eigenVal = eigenVal[idx]
+    eigenVect = eigenVect[:,idx]
+
+
+
+
+driver()
