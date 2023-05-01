@@ -96,8 +96,28 @@ def computeVectorMean(matrixX):
 
     return(meansArr)
 
+def chosenEigen (orderedEigenVals, threshold):
+    """
+    Function:       chosenEigen
+    Description:    computes number of eigenValues to use to retain a certain variance threshold
+    Input:          orderedEigenVals - ordered eigen values to calculate with
+                    threshold  decimal representation of desired variance
+    Output:         useValues - the number of eigen values to use 
     
+    """
+    sum = 0
+    sumArry = []
+    useValues = 0
 
+    for val in orderedEigenVals:
+        sum = sum + val
+        sumArry.append()
+        
+    for num in range (len(orderedEigenVals)):
+        if float(sumArry[num]) / float(sum) > threshold:
+            useValues = useValues + 1
+
+    return useValues
 
 
 def driver ():
