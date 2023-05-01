@@ -111,8 +111,8 @@ def chosenEigen (orderedEigenVals, threshold):
 
     for val in orderedEigenVals:
         sum = sum + val
-        sumArry.append()
-        
+        sumArry.append(sum)
+
     for num in range (len(orderedEigenVals)):
         if float(sumArry[num]) / float(sum) > threshold:
             useValues = useValues + 1
@@ -181,6 +181,7 @@ def driver ():
     eigenVal = eigenVal[idx]
     eigenVect = eigenVect[:,idx]
 
+    print (chosenEigen (eigenVal, 0.75))
 
 
 
