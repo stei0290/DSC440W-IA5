@@ -181,8 +181,19 @@ def driver ():
     eigenVal = eigenVal[idx]
     eigenVect = eigenVect[:,idx]
 
+    for item in eigenVect:
+        for num in item:
+            num = float(num)
+
     print (chosenEigen (eigenVal, 0.75))
 
+    plt.figure(figsize=(50, 28))
+    hlp = np.reshape(eigenVect[0], (50, 28))
+    for item in hlp:
+        for num in item:
+            num = float(num)
+    color_map = plt.imshow(hlp.transpose())
+    color_map.set_cmap("Blues_r")
 
 
 driver()
