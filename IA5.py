@@ -181,19 +181,42 @@ def driver ():
     eigenVal = eigenVal[idx]
     eigenVect = eigenVect[:,idx]
 
+# use .real to get the real parts of the vector
+    # print(eigenVect[0])
+    # print(type(eigenVect[0]))
+    # print(eigenVect[0].real)
+
+    # print(type(eigenVal[0].real))
+    # for item in eigenVect:
+    #     for num in item:
+    #         # num = float(num)
+    #         print(type(num))  
+
+
+    eigenValReal = []
+    for item in eigenVal:
+        eigenValReal.append(item.real)
+    
+    
+    eigenVectReal = []
     for item in eigenVect:
+        vector = []
         for num in item:
-            num = float(num)
+            vector.append(num.real)
+        eigenVectReal.append(vector)
 
-    print (chosenEigen (eigenVal, 0.75))
+    # print(type(eigenValReal[0]))
+    # print(type(eigenVectReal[0][0]))
 
-    plt.figure(figsize=(50, 28))
-    hlp = np.reshape(eigenVect[0], (50, 28))
-    for item in hlp:
-        for num in item:
-            num = float(num)
-    color_map = plt.imshow(hlp.transpose())
-    color_map.set_cmap("Blues_r")
+    print (chosenEigen (eigenValReal, 0.75))
+
+    # plt.figure(figsize=(50, 28))
+    # hlp = np.reshape(eigenVect[0], (50, 28))
+    # for item in hlp:
+    #     for num in item:
+    #         num = float(num)
+    # color_map = plt.imshow(hlp.transpose())
+    # color_map.set_cmap("Blues_r")
 
 
 driver()
