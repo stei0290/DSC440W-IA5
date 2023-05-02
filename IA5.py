@@ -20,7 +20,7 @@ sp.init_printing(use_unicode=True, use_latex='mathjax')
 
 TRAIN_FILE = "usps-4-9-train.csv"
 TEST_FILE = "usps-4-9-test.csv"
-TRAIN_FILE = "knownData.csv"
+#TRAIN_FILE = "knownData.csv"
 testLabel_Index = 256
 trainLabel_Index = 3
 
@@ -105,19 +105,19 @@ def chosenEigen (orderedEigenVals, threshold):
     Output:         useValues - the number of eigen values to use 
     
     """
-    sum = 0
+    sum = float(0)
     sumArry = []
     useValues = 0
 
     for val in orderedEigenVals:
-        sum = sum + val
+        sum = sum + float(val)
         sumArry.append(sum)
 
     for num in range (len(orderedEigenVals)):
-        if float(sumArry[num]) / float(sum) > threshold:
+        if float(sumArry[num]) / float(sum) < threshold:
             useValues = useValues + 1
 
-    return useValues
+    return useValues + 1
 
 
 def driver ():
