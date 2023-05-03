@@ -173,8 +173,17 @@ def driver ():
     #     print("train data read in properly")
 
 
+    """    
+    trainFeatTest = []
+    for row in trainFeatures[0:256]:
+        trainFeatTest.append(row)
+    trainFeatures = np.array(trainFeatTest)
     print(trainFeatures.shape)
+    """    
     ## Compute Covarience matix
+    
+    trainFeatures = np.dot(trainFeatures.T, trainFeatures)
+        
     covMatrix = computeCovariacneMatrix(trainFeatures)
     eigenVal, eigenVect = np.linalg.eig(covMatrix)
     # Sort eigen values and vectors from largest to smallest
@@ -210,17 +219,18 @@ def driver ():
     # print(type(eigenVectReal[0][0]))
 
     print (chosenEigen (eigenValReal, 0.75))
-
+    
     eigVec = np.array(eigenVectReal)
     displayEigArry = []
     for row in eigVec.T:
         displayEigArry.append(row[0:256])
+    
 
     display = np.array (displayEigArry)
-    print(display.shape)
+    
 
     plt.figure(figsize=(16, 16))
-    hlp = np.reshape(displayEigArry[0], (16, 16))
+    hlp = np.reshape(display[0], (16, 16))
     for item in hlp:
         for num in item:
             num = float(num)
