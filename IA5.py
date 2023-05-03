@@ -20,7 +20,7 @@ sp.init_printing(use_unicode=True, use_latex='mathjax')
 
 TRAIN_FILE = "usps-4-9-train.csv"
 TEST_FILE = "usps-4-9-test.csv"
-#TRAIN_FILE = "knownData.csv"
+# TRAIN_FILE = "knownData.csv"
 testLabel_Index = 256
 trainLabel_Index = 3
 
@@ -155,6 +155,10 @@ def driver ():
     testOutput = testOutput.reshape(numTestFeatures,1)
     numTrainFeatures = len(trainFeatures)
 
+    #Convert Train data to square
+
+    trainFeaturesSquare = np.dot(trainFeatures.T,trainFeatures)
+
 
     ##help ensure training data is read in properly I lareda checkd andit looks good
     # counter4 = 0
@@ -173,23 +177,17 @@ def driver ():
     #     print("train data read in properly")
 
 
-    """    
-    trainFeatTest = []
-    for row in trainFeatures[0:256]:
-        trainFeatTest.append(row)
-    trainFeatures = np.array(trainFeatTest)
-    print(trainFeatures.shape)
-    """    
     ## Compute Covarience matix
-    
-    trainFeatures = np.dot(trainFeatures.T, trainFeatures)
-        
-    covMatrix = computeCovariacneMatrix(trainFeatures)
+    covMatrix = computeCovariacneMatrix(trainFeaturesSquare)
+    print(covMatrix)
     eigenVal, eigenVect = np.linalg.eig(covMatrix)
     # Sort eigen values and vectors from largest to smallest
+
     idx = eigenVal.argsort()[::-1]
     eigenVal = eigenVal[idx]
     eigenVect = eigenVect[:,idx]
+
+    # print(eigenVal)
 
 # use .real to get the real parts of the vector
     # print(eigenVect[0])
@@ -215,27 +213,62 @@ def driver ():
             vector.append(num.real)
         eigenVectReal.append(vector)
 
-    # print(type(eigenValReal[0]))
-    # print(type(eigenVectReal[0][0]))
+
 
     print (chosenEigen (eigenValReal, 0.75))
-    
-    eigVec = np.array(eigenVectReal)
-    displayEigArry = []
+
+    eigVec = np.array(eigenVect)
+    displayEigArray = []
+
     for row in eigVec.T:
-        displayEigArry.append(row[0:256])
-    
+        displayEigArray.append(row)
 
-    display = np.array (displayEigArry)
-    
+    display =np.array(displayEigArray)
 
-    plt.figure(figsize=(16, 16))
-    hlp = np.reshape(display[0], (16, 16))
-    for item in hlp:
-        for num in item:
-            num = float(num)
-    color_map = plt.imshow(hlp.transpose())
-    color_map.set_cmap("Blues_r")
+
+    for i in range(3):
+        plt.figure(figsize=(16, 16))
+        hlp = np.reshape(display[i], (16,16))
+        for item in hlp:
+            for num in item:
+                num = float(num)
+        color_map = plt.imshow(hlp.transpose())
+        color_map.set_cmap("Blues_r")
+
+    items = []
+    for i in range(3):
+        items.append(displayEigArray[i])
+
+    item = np.array(items)
+
+    fourArr = []
+    nineArr = []
+
+    for i in range(len(trainFeatures)):
+        if (trainOutput[i] == 0):
+            fourArr.append(trainFeatures[i])
+        else:
+            nineArr.append(trainFeatures[i])
+    fourArr = np.array(fourArr)
+    nineArr = np.array(nineArr)
+
+
+
+    display4 = np.dot(items,fourArr.T)
+    display9 = np.dot(items,nineArr.T)
+
+    print(display4.shape)
+    print(display9.shape)
+
+    fig, ax = plt.subplots()
+    ax = fig.add_subplot(projection = '3d')
+    ax.scatter(display4[0], display4[1], display4[2], color = 'r')
+    ax.scatter(display9[0], display9[1], display9[2], color = 'b')
+    plt.show()
+
+
+ 
+
 
 
 driver()
