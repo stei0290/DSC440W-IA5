@@ -173,6 +173,7 @@ def driver ():
     #     print("train data read in properly")
 
 
+    print(trainFeatures.shape)
     ## Compute Covarience matix
     covMatrix = computeCovariacneMatrix(trainFeatures)
     eigenVal, eigenVect = np.linalg.eig(covMatrix)
@@ -210,13 +211,21 @@ def driver ():
 
     print (chosenEigen (eigenValReal, 0.75))
 
-    # plt.figure(figsize=(50, 28))
-    # hlp = np.reshape(eigenVect[0], (50, 28))
-    # for item in hlp:
-    #     for num in item:
-    #         num = float(num)
-    # color_map = plt.imshow(hlp.transpose())
-    # color_map.set_cmap("Blues_r")
+    eigVec = np.array(eigenVectReal)
+    displayEigArry = []
+    for row in eigVec.T:
+        displayEigArry.append(row[0:256])
+
+    display = np.array (displayEigArry)
+    print(display.shape)
+
+    plt.figure(figsize=(16, 16))
+    hlp = np.reshape(displayEigArry[0], (16, 16))
+    for item in hlp:
+        for num in item:
+            num = float(num)
+    color_map = plt.imshow(hlp.transpose())
+    color_map.set_cmap("Blues_r")
 
 
 driver()
